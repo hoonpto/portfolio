@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내 포트폴리오</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f5f4;
+    --bg3: #ede8e3;
+    --text: #1a1a18;
+    --text2: #6b6b67;
+    --text3: #9f9e9a;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --radius: 10px;
+    --radius-lg: 14px;
+    --blue: #185FA5;
+    --green: #0F6E56;
+    --red: #993C1D;
+    --green-bg: #E1F5EE;
+    --green-text: #085041;
+    --red-bg: #FCEBEB;
+    --red-text: #791F1F;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg2: #252523;
+      --bg3: #2e2e2b;
+      --text: #f0ece6;
+      --text2: #9f9e9a;
+      --text3: #6b6b67;
+      --border: rgba(255,255,255,0.1);
+      --border2: rgba(255,255,255,0.18);
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD Gothic Neo', sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 16px 48px; }
+
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0 20px; flex-wrap: wrap; gap: 10px; }
+  .nav-logo { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; color: var(--text); }
+  .nav-logo i { font-size: 22px; color: var(--blue); }
+  .nav-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .live-tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; background: var(--green-bg); color: var(--green-text); display: flex; align-items: center; gap: 4px; }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 1.8s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .date-label { font-size: 12px; color: var(--text3); }
+  .cur-switch { display: flex; background: var(--bg2); border-radius: 20px; padding: 3px; border: 0.5px solid var(--border); }
+  .cur-switch button { border: none; background: transparent; border-radius: 16px; padding: 5px 16px; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text2); transition: all 0.15s; }
+  .cur-switch button.on { background: var(--bg); color: var(--text); border: 0.5px solid var(--border2); }
+
+  .hero { background: var(--bg2); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; border: 0.5px solid var(--border); }
+  .hero-label { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+  .hero-total { font-size: 36px; font-weight: 700; color: var(--text); letter-spacing: -1px; }
+  .hero-sub { font-size: 13px; color: var(--text2); margin-top: 5px; }
+  .hero-badges { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .badge { font-size: 12px; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
+  .b-green { background: var(--green-bg); color: var(--green-text); }
+  .b-gray { background: var(--bg); color: var(--text2); border: 0.5px solid var(--border); }
+  .hero-mini { display: flex; gap: 20px; flex-wrap: wrap; }
+  .mini-s { text-align: right; }
+  .mini-s .ml { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .mini-s .mv { font-size: 16px; font-weight: 600; color: var(--text); }
+  .mini-s .ms { font-size: 11px; }
+
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+  .stat-card { background: var(--bg2); border-radius: var(--radius); padding: 16px; border: 0.5px solid var(--border); }
+  .sc-label { font-size: 11px; color: var(--text3); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+  .sc-val { font-size: 20px; font-weight: 600; color: var(--text); }
+  .sc-sub { font-size: 11px; margin-top: 3px; }
+
+  .row2 { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 12px; margin-bottom: 12px; }
+  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; }
+  .card-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .card-hd-l { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text2); }
+  .edit-btn { font-size: 12px; color: var(--blue); background: none; border: none; cursor: pointer; font-weight: 600; }
+
+  .at-row { display: flex; align-items: center; padding: 9px 0; border-bottom: 0.5px solid var(--border); }
+  .at-row:last-child { border-bottom: none; }
+  .at-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-right: 10px; }
+  .at-info { flex: 1; min-width: 0; }
+  .at-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .at-ticker { font-size: 11px; color: var(--text3); }
+  .bar-bg { width: 100%; height: 3px; background: var(--bg2); border-radius: 2px; margin-top: 5px; }
+  .bar-fg { height: 3px; border-radius: 2px; }
+  .at-right { text-align: right; flex-shrink: 0; margin-left: 10px; }
+  .at-val { font-size: 13px; font-weight: 600; color: var(--text); }
+  .at-ret { font-size: 11px; }
+
+  .leg-row { display: flex; flex-direction: column; gap: 10px; }
+  .leg-item { display: flex; align-items: center; justify-content: space-between; }
+  .leg-l { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); }
+  .leg-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .leg-r { font-size: 12px; color: var(--text2); }
+
+  .full-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 12px; }
+  .sec-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .sec-hd h2 { font-size: 14px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; }
+  .sec-hd h2 i { font-size: 16px; color: var(--text2); }
+  .add-btn { font-size: 12px; color: var(--blue); background: none; border: 0.5px solid #85B7EB; border-radius: 20px; padding: 5px 14px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  th { font-size: 11px; color: var(--text3); font-weight: 500; text-align: left; padding: 0 0 10px; border-bottom: 0.5px solid var(--border); }
+  td { font-size: 13px; color: var(--text); padding: 10px 0; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  th:nth-child(n+3), td:nth-child(n+3) { text-align: right; }
+  .cat-badge { font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+
+  .ret-leg { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+  .ret-leg span { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text2); }
+  .ret-sq { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+
+  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; }
+  .modal-bg.open { display: flex; }
+  .modal { background: var(--bg); border-radius: var(--radius-lg); padding: 24px; width: 100%; max-width: 420px; margin: 16px; border: 0.5px solid var(--border2); }
+  .modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 18px; color: var(--text); }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 5px; font-weight: 500; }
+  .form-group input, .form-group select { width: 100%; padding: 9px 12px; border: 0.5px solid var(--border2); border-radius: var(--radius); background: var(--bg2); color: var(--text); font-size: 13px; outline: none; }
+  .form-group input:focus, .form-group select:focus { border-color: var(--blue); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .modal-btns { display: flex; gap: 8px; margin-top: 20px; }
+  .modal-btns button { flex: 1; padding: 10px; border-radius: var(--radius); border: none; cursor: pointer; font-size: 13px; font-weight: 600; }
+  .btn-cancel { background: var(--bg2); color: var(--text2); border: 0.5px solid var(--border); }
+  .btn-save { background: var(--blue); color: #fff; }
+
+  .pos { color: #0F6E56; }
+  .neg { color: #993C1D; }
+  .neu { color: var(--text2); }
+
+  .footer { text-align: center; padding-top: 20px; font-size: 11px; color: var(--text3); }
+
+  @media (max-width: 600px) {
+    .hero-total { font-size: 28px; }
+    .row2 { grid-template-columns: 1fr; }
+    .grid3 { grid-template-columns: 1fr 1fr; }
+    .hero-mini { display: none; }
+    table { font-size: 12px; }
+    th, td { padding: 8px 0; }
+  }
+  @media (max-width: 400px) {
+    .grid3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <div class="nav-logo">
+      <i class="ti ti-chart-pie"></i>
+      내 포트폴리오
+    </div>
+    <div class="nav-right">
+      <span class="live-tag"><span class="live-dot"></span>실시간</span>
+      <span class="date-label" id="today-date"></span>
+      <div class="cur-switch">
+        <button class="on" id="btn-krw" onclick="setCur('KRW')">₩ 원화</button>
+        <button id="btn-usd" onclick="setCur('USD')">$ 달러</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div>
+      <div class="hero-label">총 자산</div>
+      <div class="hero-total" id="h-total">—</div>
+      <div class="hero-sub" id="h-sub">—</div>
+      <div class="hero-badges">
+        <span class="badge b-green" id="h-gain">—</span>
+        <span class="badge b-green" id="h-today">오늘 —</span>
+        <span class="badge b-gray" id="h-count">—</span>
+      </div>
+    </div>
+    <div class="hero-mini" id="hero-mini"></div>
+  </div>
+
+  <div class="grid3" id="stat-cards"></div>
+
+  <div class="row2">
+    <div class="card">
+      <div class="card-hd">
+        <span class="card-hd-l"><i class="ti ti-list-details"></i>자산 현황</span>
+        <button class="edit-btn" onclick="openModal()">+ 자산 추가</button>
+      </div>
+      <div id="asset-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-hd">
+        <span class="card-hd-l"><i class="ti ti-chart-donut"></i>자산 배분</span>
+      </div>
+      <div style="position:relative;width:100%;height:170px;margin-bottom:14px">
+        <canvas id="donut" role="img" aria-label="자산 배분 도넛 차트"></canvas>
+      </div>
+      <div class="leg-row" id="leg"></div>
+    </div>
+  </div>
+
+  <div class="full-card">
+    <div class="sec-hd">
+      <h2><i class="ti ti-table"></i>전체 자산 상세</h2>
+      <button class="add-btn" onclick="openModal()"><i class="ti ti-plus"></i>자산 추가</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <colgroup><col style="width:26%"><col style="width:13%"><col style="width:20%"><col style="width:19%"><col style="width:12%"><col style="width:10%"></colgroup>
+        <thead><tr>
+          <th>자산명</th><th>구분</th><th>현재가</th><th>평가액</th><th>수익률</th><th>비중</th>
+        </tr></thead>
+        <tbody id="tbl-body"></tbody>
+      </table>
+    </div>
+    <div style="display:flex;justify-content:space-between;padding-top:12px;margin-top:4px;border-top:0.5px solid var(--border);font-size:11px;color:var(--text3)">
+      <span>USD/KRW 1,380 기준</span>
+      <span id="tbl-count">—</span>
+    </div>
+  </div>
+
+  <div class="full-card" style="margin-bottom:0">
+    <div class="sec-hd" style="margin-bottom:10px">
+      <h2><i class="ti ti-chart-bar"></i>자산군별 수익률</h2>
+    </div>
+    <div class="ret-leg" id="ret-legend"></div>
+    <div style="position:relative;width:100%;height:160px">
+      <canvas id="bar-chart" role="img" aria-label="자산군별 수익률 막대 차트"></canvas>
+    </div>
+  </div>
+
+  <div class="footer">데이터는 브라우저에 저장됩니다 · USD/KRW 1,380 고정</div>
+</div>
+
+<div class="modal-bg" id="modal-bg" onclick="closeModalBg(event)">
+  <div class="modal">
+    <h3>새 자산 추가</h3>
+    <div class="form-group">
+      <label>자산 구분</label>
+      <select id="f-cat" onchange="onCatChange()">
+        <option value="국내주식">국내주식</option>
+        <option value="미국주식">미국주식</option>
+        <option value="코인">코인</option>
+        <option value="달러">달러/외화</option>
+        <option value="원화">원화</option>
+        <option value="기타">기타</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>자산명 (예: 삼성전자, BTC, 애플)</label>
+      <input type="text" id="f-name" placeholder="자산명 입력">
+    </div>
+    <div class="form-group">
+      <label>티커/코드 (예: 005930, AAPL, BTC)</label>
+      <input type="text" id="f-ticker" placeholder="티커 입력">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label id="f-price-label">현재가 (원)</label>
+        <input type="number" id="f-price" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label id="f-qty-label">보유 수량</label>
+        <input type="number" id="f-qty" placeholder="0" step="any">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label id="f-cost-label">평균 매수가 (원)</label>
+        <input type="number" id="f-cost" placeholder="0">
+      </div>
+      <div class="form-group" style="display:flex;align-items:flex-end">
+        <div style="font-size:11px;color:var(--text2);padding-bottom:6px">수익률은 자동 계산됩니다</div>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">취소</button>
+      <button class="btn-save" onclick="saveAsset()">추가하기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const FX = 1380;
+let cur = 'KRW';
+
+const CATS = [
+  {name:'국내주식', color:'#185FA5', bg:'#E6F1FB', tc:'#0C447C'},
+  {name:'미국주식', color:'#1D9E75', bg:'#E1F5EE', tc:'#085041'},
+  {name:'코인',     color:'#E24B4A', bg:'#FCEBEB', tc:'#791F1F'},
+  {name:'달러',     color:'#BA7517', bg:'#FAEEDA', tc:'#633806'},
+  {name:'원화',     color:'#888780', bg:'#F1EFE8', tc:'#444441'},
+  {name:'기타',     color:'#534AB7', bg:'#EEEDFE', tc:'#3C3489'},
+];
+const catMap = {};
+CATS.forEach(c => { catMap[c.name] = c; });
+
+const defaultAssets = [
+  {cat:'국내주식', name:'삼성전자',  ticker:'005930', price_krw:78500,  qty:50,   cost_krw:75000},
+  {cat:'국내주식', name:'KODEX 200', ticker:'069500', price_krw:36800,  qty:100,  cost_krw:34000},
+  {cat:'미국주식', name:'Apple',     ticker:'AAPL',   price_usd:213.5,  qty:10,   cost_usd:185},
+  {cat:'미국주식', name:'NVDA',      ticker:'NVDA',   price_usd:875.2,  qty:5,    cost_usd:620},
+  {cat:'미국주식', name:'VOO',       ticker:'VOO',    price_usd:498.3,  qty:8,    cost_usd:450},
+  {cat:'코인',     name:'비트코인',  ticker:'BTC',    price_usd:68450,  qty:0.3,  cost_usd:52000},
+  {cat:'코인',     name:'이더리움',  ticker:'ETH',    price_usd:3580,   qty:2.0,  cost_usd:2800},
+  {cat:'달러',     name:'달러 예금', ticker:'USD',    price_usd:1,      qty:12000,cost_usd:1},
+  {cat:'원화',     name:'원화 예금', ticker:'KRW',    price_krw:1,      qty:8500000,cost_krw:1},
+  {cat:'기타',     name:'금 ETF',   ticker:'GLD',    price_usd:218.4,  qty:15,   cost_usd:195},
+];
+
+function loadAssets() {
+  try {
+    const s = localStorage.getItem('portfolio_assets');
+    return s ? JSON.parse(s) : defaultAssets;
+  } catch(e) { return defaultAssets; }
+}
+function saveAssets(arr) {
+  try { localStorage.setItem('portfolio_assets', JSON.stringify(arr)); } catch(e){}
+}
+
+let assets = loadAssets();
+
+function valKRW(a) { return a.price_krw !== undefined ? a.price_krw * a.qty : a.price_usd * a.qty * FX; }
+function costKRW(a) { return a.cost_krw !== undefined ? a.cost_krw * a.qty : a.cost_usd * a.qty * FX; }
+function ret(a) { const v=valKRW(a),c=costKRW(a); if(c<=a.qty) return 0; return (v-c)/c*100; }
+function totalKRW() { return assets.reduce((s,a) => s+valKRW(a), 0); }
+
+function fmtMain(v) {
+  if(cur==='KRW') {
+    if(v>=1e8) return '₩' + (Math.round(v/1e6)/100).toFixed(2) + '억';
+    if(v>=1e4) return '₩' + Math.round(v/1e4) + '만';
+    return '₩' + Math.round(v).toLocaleString();
+  } else {
+    const d = v/FX;
+    if(d>=1e6) return '$' + (Math.round(d/1e4)/100).toFixed(2) + 'M';
+    if(d>=1e3) return '$' + Math.round(d).toLocaleString();
+    return '$' + d.toFixed(2);
+  }
+}
+function fmtPrice(a) {
+  if(cur==='KRW') {
+    const p = a.price_krw !== undefined ? a.price_krw : Math.round(a.price_usd*FX);
+    return '₩' + p.toLocaleString();
+  } else {
+    if(a.price_usd !== undefined) return '$' + a.price_usd.toLocaleString();
+    return '$' + (a.price_krw/FX).toFixed(2);
+  }
+}
+
+function render() {
+  const total = totalKRW();
+  const totalCost = assets.reduce((s,a) => s+costKRW(a), 0);
+  const gain = total - totalCost;
+  const gainPct = totalCost>0 ? (gain/totalCost*100) : 0;
+
+  document.getElementById('h-total').textContent = cur==='KRW'
+    ? '₩' + Math.round(total).toLocaleString()
+    : '$' + Math.round(total/FX).toLocaleString();
+  document.getElementById('h-sub').textContent = cur==='KRW'
+    ? '≈ $' + Math.round(total/FX).toLocaleString() + ' · USD/KRW 1,380'
+    : '≈ ₩' + Math.round(total/1e4) + '만 · USD/KRW 1,380';
+  document.getElementById('h-gain').textContent = (gainPct>=0?'+':'') + gainPct.toFixed(2) + '% 총 수익';
+  document.getElementById('h-count').textContent = assets.length + '종목';
+
+  const catTotals = {}, catCosts = {};
+  CATS.forEach(c => { catTotals[c.name]=0; catCosts[c.name]=0; });
+  assets.forEach(a => {
+    catTotals[a.cat] = (catTotals[a.cat]||0) + valKRW(a);
+    catCosts[a.cat]  = (catCosts[a.cat]||0)  + costKRW(a);
+  });
+
+  const topCats = CATS.filter(c => catTotals[c.name]>0).slice(0,3);
+  document.getElementById('hero-mini').innerHTML = topCats.map(c => {
+    const v=catTotals[c.name], co=catCosts[c.name];
+    const r = co>1 ? ((v-co)/co*100) : 0;
+    return `<div class="mini-s">
+      <div class="ml">${c.name}</div>
+      <div class="mv">${fmtMain(v)}</div>
+      <div class="ms ${r>=0?'pos':'neg'}">${r>=0?'+':''}${r.toFixed(1)}%</div>
+    </div>`;
+  }).join('');
+
+  const bottom3 = CATS.filter(c => catTotals[c.name]>0).slice(3);
+  document.getElementById('stat-cards').innerHTML = bottom3.length===0
+    ? '<div style="grid-column:1/-1;text-align:center;color:var(--text3);font-size:13px;padding:20px">추가 자산이 없습니다</div>'
+    : bottom3.map(c => {
+      const v=catTotals[c.name], co=catCosts[c.name];
+      const r = co>1 ? ((v-co)/co*100) : 0;
+      return `<div class="stat-card">
+        <div class="sc-label"><i class="ti ti-wallet"></i>${c.name}</div>
+        <div class="sc-val">${fmtMain(v)}</div>
+        <div class="sc-sub ${r>=0?'pos':'neg'}">${r===0?'—':(r>=0?'+':'')+r.toFixed(1)+'%'}</div>
+      </div>`;
+    }).join('');
+
+  const al = document.getElementById('asset-list');
+  al.innerHTML = assets.slice(0,7).map(a => {
+    const v=valKRW(a), r=ret(a), c=catMap[a.cat]||CATS[5];
+    const pct=(v/total*100);
+    return `<div class="at-row">
+      <span class="at-dot" style="background:${c.color}"></span>
+      <div class="at-info">
+        <div class="at-name">${a.name} <span class="at-ticker">${a.ticker}</span></div>
+        <div class="bar-bg"><div class="bar-fg" style="width:${Math.min(pct*3,100)}%;background:${c.color}"></div></div>
+      </div>
+      <div class="at-right">
+        <div class="at-val">${fmtMain(v)}</div>
+        <div class="at-ret ${r>=0?'pos':'neg'}">${r===0?'—':(r>=0?'+':'')+r.toFixed(1)+'%'}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('leg').innerHTML = CATS.filter(c=>catTotals[c.name]>0).map(c => `
+    <div class="leg-item">
+      <span class="leg-l"><span class="leg-sq" style="background:${c.color}"></span>${c.name}</span>
+      <span class="leg-r">${(catTotals[c.name]/total*100).toFixed(1)}%</span>
+    </div>`).join('');
+
+  const tbody = document.getElementById('tbl-body');
+  tbody.innerHTML = assets.map(a => {
+    const v=valKRW(a), r=ret(a), pct=(v/total*100);
+    const c=catMap[a.cat]||CATS[5];
+    return `<tr>
+      <td style="font-weight:600">${a.name}</td>
+      <td><span class="cat-badge" style="background:${c.bg};color:${c.tc}">${a.cat}</span></td>
+      <td>${fmtPrice(a)}</td>
+      <td>${fmtMain(v)}</td>
+      <td class="${r>=0?'pos':'neg'}">${r===0?'—':(r>=0?'+':'')+r.toFixed(1)+'%'}</td>
+      <td style="color:var(--text2)">${pct.toFixed(1)}%</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('tbl-count').textContent = '총 '+assets.length+'종목';
+
+  renderDonut(catTotals, total);
+  renderBar(catTotals, catCosts);
+}
+
+let donut=null, bar=null;
+function renderDonut(catTotals, total) {
+  const cats = CATS.filter(c=>catTotals[c.name]>0);
+  if(donut) donut.destroy();
+  donut = new Chart(document.getElementById('donut'), {
+    type:'doughnut',
+    data:{
+      labels:cats.map(c=>c.name),
+      datasets:[{data:cats.map(c=>Math.round(catTotals[c.name]/total*1000)/10), backgroundColor:cats.map(c=>c.color), borderWidth:2, borderColor:'transparent', hoverOffset:4}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,cutout:'70%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed.toFixed(1)}%`}}}}
+  });
+}
+function renderBar(catTotals, catCosts) {
+  const cats = CATS.filter(c=>catTotals[c.name]>0);
+  const rets = cats.map(c => { const v=catTotals[c.name]||0,co=catCosts[c.name]||0; return co<=1?0:Math.round((v-co)/co*1000)/10; });
+  if(bar) bar.destroy();
+  bar = new Chart(document.getElementById('bar-chart'), {
+    type:'bar',
+    data:{labels:cats.map(c=>c.name),datasets:[{label:'수익률',data:rets,backgroundColor:cats.map((c,i)=>rets[i]>=0?c.color:'#E24B4A'),borderRadius:5,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>(ctx.parsed.y>=0?'+':'')+ctx.parsed.y.toFixed(1)+'%'}}},scales:{x:{grid:{display:false},ticks:{font:{size:11},color:'#888780'}},y:{grid:{color:'rgba(136,135,128,0.12)'},border:{display:false},ticks:{font:{size:11},color:'#888780',callback:v=>(v>=0?'+':'')+v+'%'}}}}
+  });
+  document.getElementById('ret-legend').innerHTML = cats.map((c,i)=>`<span><span class="ret-sq" style="background:${c.color}"></span>${c.name} <b style="color:${rets[i]>=0?'#0F6E56':'#993C1D'}">${rets[i]>=0?'+':''}${rets[i].toFixed(1)}%</b></span>`).join('');
+}
+
+function setCur(c) {
+  cur=c;
+  document.getElementById('btn-krw').classList.toggle('on',c==='KRW');
+  document.getElementById('btn-usd').classList.toggle('on',c==='USD');
+  render();
+}
+
+function onCatChange() {
+  const cat = document.getElementById('f-cat').value;
+  const isKrw = cat==='국내주식'||cat==='원화';
+  document.getElementById('f-price-label').textContent = isKrw ? '현재가 (원)' : '현재가 (달러 $)';
+  document.getElementById('f-cost-label').textContent = isKrw ? '평균 매수가 (원)' : '평균 매수가 (달러 $)';
+}
+
+function openModal() { document.getElementById('modal-bg').classList.add('open'); }
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+  ['f-name','f-ticker','f-price','f-qty','f-cost'].forEach(id=>document.getElementById(id).value='');
+}
+function closeModalBg(e) { if(e.target===document.getElementById('modal-bg')) closeModal(); }
+
+function saveAsset() {
+  const cat    = document.getElementById('f-cat').value;
+  const name   = document.getElementById('f-name').value.trim();
+  const ticker = document.getElementById('f-ticker').value.trim().toUpperCase();
+  const price  = parseFloat(document.getElementById('f-price').value);
+  const qty    = parseFloat(document.getElementById('f-qty').value);
+  const cost   = parseFloat(document.getElementById('f-cost').value);
+  if(!name || isNaN(price) || isNaN(qty)) { alert('자산명, 현재가, 수량을 입력해주세요.'); return; }
+  const isKrw = cat==='국내주식'||cat==='원화';
+  const a = {cat, name, ticker: ticker||name};
+  if(isKrw) { a.price_krw=price; a.qty=qty; a.cost_krw=isNaN(cost)?price:cost; }
+  else       { a.price_usd=price; a.qty=qty; a.cost_usd=isNaN(cost)?price:cost; }
+  assets.push(a);
+  saveAssets(assets);
+  closeModal();
+  render();
+}
+
+const d = new Date();
+document.getElementById('today-date').textContent = d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');
+
+render();
+</script>
+</body>
+</html>
