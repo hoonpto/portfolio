@@ -1,0 +1,11 @@
+{
+  "name": "portfolio-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "키움·토스·신한 계좌를 합쳐 보는 실시간 포트폴리오 대시보드",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node server/server.js"
+  }
+}
