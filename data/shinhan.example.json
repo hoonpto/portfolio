@@ -1,0 +1,9 @@
+{
+  "accountName": "신한 ISA ****-33",
+  "updatedAt": "2026-11-27T09:00:00+09:00",
+  "cash": { "KRW": 2400000, "USD": 0 },
+  "holdings": [
+    { "symbol": "360750", "name": "TIGER 미국S&P500", "market": "KR", "currency": "KRW", "assetClass": "ETF", "qty": 300, "avgPrice": 17150, "price": 20890 },
+    { "symbol": "148070", "name": "KOSEF 국고채10년", "market": "KR", "currency": "KRW", "assetClass": "채권", "qty": 60, "avgPrice": 112000, "price": 114350 }
+  ]
+}
